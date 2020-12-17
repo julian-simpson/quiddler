@@ -1,0 +1,47 @@
+# docker-compose.yml
+version: '3.0'
+services:
+  db:
+    image: postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+  redis:
+    image: redis:4.0-alpine
+    volumes:
+      - redis:/data
+    ports:
+      - 6379:6379
+  web:
+    build:
+      context: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - WEBPACKER_DEV_SERVER_HOST=webpacker
+      - REDIS_URL=redis://redis:6379/
+    depends_on:
+      - db
+      - redis
+    links:
+      - redis  
+    environment:
+      PG_PASSWORD: password
+  webpacker:
+    build: .
+    environment:
+      - NODE_ENV=development
+      - RAILS_ENV=development
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+    command: ./bin/webpack-dev-server
+    volumes:
+      - .:/quiddler
+    ports:
+      - '127.0.0.1:3035:3035'
+volumes:
+  redis:
+  postgres:

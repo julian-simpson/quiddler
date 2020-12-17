@@ -1,0 +1,13 @@
+AllCops:
+  NewCops: enable
+  Exclude:
+    - 'bin/bundle'
+    - 'app/helpers/application_helper.rb'
+    - 'app/models/application_record.rb'
+    - 'config/application.rb'
+    - 'Gemfile'
+Metrics/BlockLength:
+  Exclude:
+    - 'config/environments/development.rb'
+Style/RegexpLiteral:
+  EnforcedStyle: slashes
