@@ -4,9 +4,11 @@ services:
   db:
     image: postgres
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - ./postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: password
+    ports:
+      - 5433:5432
   redis:
     image: redis:4.0-alpine
     volumes:
@@ -18,7 +20,7 @@ services:
       context: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
-      - .:/usr/src/app
+      - .:/quiddler
     ports:
       - "127.0.0.1:3000:3000"
     environment:
@@ -28,9 +30,7 @@ services:
       - db
       - redis
     links:
-      - redis  
-    environment:
-      PG_PASSWORD: password
+      - redis
   webpacker:
     build: .
     environment:

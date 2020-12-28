@@ -1,0 +1,2 @@
+class CreateCard < ApplicationRecord
+end
