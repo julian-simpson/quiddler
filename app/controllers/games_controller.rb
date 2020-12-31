@@ -29,26 +29,26 @@ class GamesController < ApplicationController
   def show
     # show current hand
 
-=begin
-    session[:player_hands] = []
-    session[:discarded_cards] = []
-    session[:card_deck] = []
-    session[:cards_dealt] = false
-=end
-    @game = Game.find(params[:id])
+    # session[:player_hands] = []
+    # session[:discarded_cards] = []
+    # session[:card_deck] = []
+    # session[:cards_dealt] = false
 
+    @game = Game.find(params[:id])
+    session[:current_game_id] = params[:id]
+    session[:current_player_number] = 0
     @player_hands = session[:player_hands] || []
-    #Rails.logger.debug("Player Hands")
-    #Rails.logger.debug(@player_hands.to_yaml)
+    # Rails.logger.debug("Player Hands")
+    # Rails.logger.debug(@player_hands.to_yaml)
     @discarded_cards = session[:discarded_cards] || []
-    #Rails.logger.debug("discarded_cards")
-    #Rails.logger.debug(@discarded_cards.to_yaml)
+    # Rails.logger.debug("discarded_cards")
+    # Rails.logger.debug(@discarded_cards.to_yaml)
     @card_deck = session[:card_deck] || []
-    #Rails.logger.debug("card_deck")
-    #Rails.logger.debug(@card_deck.to_yaml)
+    # Rails.logger.debug("card_deck")
+    # Rails.logger.debug(@card_deck.to_yaml)
     @cards_dealt = session[:cards_dealt] || false
-    #Rails.logger.debug("cards_dealt")
-    #Rails.logger.debug(@cards_dealt)
+    # Rails.logger.debug("cards_dealt")
+    # Rails.logger.debug(@cards_dealt)
   end
 
   def update

@@ -3,6 +3,7 @@
 # Game Reflex
 class GameReflex < ApplicationReflex
   def deal
+    # morph :nothing
     player_count = element.dataset[:player_count].to_i
 
     shuffled_deck = Card.order(Arel.sql('RANDOM()')).as_json
@@ -23,10 +24,18 @@ class GameReflex < ApplicationReflex
     session[:discarded_cards] = []
     session[:discarded_cards].push(shuffled_deck.first)
     shuffled_deck.shift
+    discard_html = render(partial: '/games/discard_pile', locals: { cards: session[:discarded_cards] })
+
+    cable_ready["game:#{session[:current_game_id]}"].morph(
+      selector: '#discard-landing',
+      html: discard_html
+    )
 
     session[:player_hands] = player_hands
     session[:card_deck] = shuffled_deck
     session[:cards_dealt] = true
+    cable_ready["game:#{session[:current_game_id]}"].broadcast
+    morph :nothing
   end
 
   def pick_up_from_deck
@@ -53,7 +62,7 @@ class GameReflex < ApplicationReflex
 
   def discard
     card_id = element.dataset['card-id']
-    index = session[:player_hands][0].index {|card| card['id'].to_i == card_id.to_i }
+    index = session[:player_hands][0].index { |card| card['id'].to_i == card_id.to_i }
     session[:discarded_cards].push session[:player_hands][0].delete_at(index)
   end
 end

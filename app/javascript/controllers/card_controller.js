@@ -17,14 +17,13 @@ export default class extends ApplicationController {
       group: 'shared',
       animation: 0,
       swapThreshold: 0,
-      filter: '.previous-discard',
+      filter: '.not-draggable',
       onEnd: this.drop.bind(this),
       onMove: this.move.bind(this),
     })
 
   }
   drop(event) {
-    console.log("IT DROPPED")
     if (event.from.id == "current-player-hand" && event.to.id == "discard-landing"){
       this.stimulate('GameReflex#discard', event.item)
     } else if (event.from.id == "discard-landing" && event.to.id == "current-player-hand"){
@@ -40,7 +39,7 @@ export default class extends ApplicationController {
   }
 
   move(event){
-    if (event.dragged.classList.contains("previous-discard")){
+    if (event.dragged.classList.contains("not-draggable")){
       return false
     }
   }
@@ -50,7 +49,7 @@ export default class extends ApplicationController {
     let sorted_card_ids= Array.from(cardElements).map((card) => {
       return card.dataset.cardId
     })
-    console.log(sorted_card_ids)
+    // console.log(sorted_card_ids)
     return sorted_card_ids
   }
 }
