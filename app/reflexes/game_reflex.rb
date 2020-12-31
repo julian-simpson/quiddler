@@ -4,36 +4,34 @@
 class GameReflex < ApplicationReflex
   def deal
     # morph :nothing
-    player_count = element.dataset[:player_count].to_i
+    game_id = session[:current_game_id]
+    player_count = element.dataset[:player_count]
+    Rails.logger.debug("games/#{game_id}/game_play")
+    game_play = Rails.cache.read("games/#{game_id}/game_play")
+    Rails.logger.debug("game_play")
+    Rails.logger.debug(game_play)
 
-    shuffled_deck = Card.order(Arel.sql('RANDOM()')).as_json
-
-    player_hands = []
-    player_count.times do |i|
-      player_hands[i] = []
-    end
     player_index = 0
-    shuffled_deck.delete_if do |card|
-      break if player_hands.last.length == 3
+    game_play[:card_deck].delete_if do |card|
+      break if game_play[:player_hands].last.length == (3 + (game_play[:round] - 1))
 
-      player_hands[player_index].push(card)
+      game_play[:player_hands][player_index].push(card)
       player_index += 1
-      player_index = 0 if player_index >= player_count
+      player_index = 0 if player_index >= player_count.to_i
       true
     end
-    session[:discarded_cards] = []
-    session[:discarded_cards].push(shuffled_deck.first)
-    shuffled_deck.shift
-    discard_html = render(partial: '/games/discard_pile', locals: { cards: session[:discarded_cards] })
 
-    cable_ready["game:#{session[:current_game_id]}"].morph(
+    game_play[:discarded_cards].push(game_play[:card_deck].first)
+    game_play[:card_deck].shift
+    discard_html = render(partial: '/games/discard_pile', locals: { cards: game_play[:discarded_cards] })
+
+    cable_ready["game:#{game_id}"].morph(
       selector: '#discard-landing',
       html: discard_html
     )
 
-    session[:player_hands] = player_hands
-    session[:card_deck] = shuffled_deck
-    session[:cards_dealt] = true
+    game_play[:cards_dealt] = true
+    Rails.cache.write("games/#{game_id}/game_play", game_play)
     cable_ready["game:#{session[:current_game_id]}"].broadcast
     morph :nothing
   end

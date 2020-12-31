@@ -5,18 +5,18 @@
       <button 
         class="bg-purple-600 shadow-lg rounded-md w-32 mb-4 h-16 min-w-max flex justify-center items-center" 
         data-reflex="click->GameReflex#deal"
-        data-game-id="<%= @game.id %>"
-        data-player-count="<%= @game.player_count %>">
+        data-game-id="<%= @game_id %>"
+        data-player-count="<%= @player_count %>">
         Deal
       </button>
 
     </div>
-    <%= render partial: "discard_pile", locals: { cards: @discarded_cards } %>
+    <%= render partial: "discard_pile", locals: { cards: @game_play[:discarded_cards] } %>
   </div>
 
   <div id="right-col" class="flex flex-col justify-between w-full">
     <div id="player-area" class="flex flex-wrap justify-center w-full">
-      <% ( @game.player_count).times do |count| %>
+      <% @player_count.times do |count| %>
         <div id="player_space_<%=count%>" class="bg-white rounded-lg m-4 p-4 w-72 flex flex-col justify-center items-center align-middle">
           <div class=" bg-<%=['pink-200','yellow-200','red-400','green-300','blue-300','purple-200','grey-400','indigo-400'][count]%> text-black text-xl w-12 h-12 mb-4 rounded-full inline-flex items-center align-middle justify-center"> 
             P<%=count + 1%>
@@ -25,11 +25,12 @@
       <% end %>  
     </div>
     <div id="current-player-hand" data-controller="card" class="flex flex-wrap justify-center items-center w-full">
-      <%if @cards_dealt %>
-        <%@player_hands[0].each do |card|%>
-          <div id="card-<%=card["id"]%>" data-card-id="<%=card["id"]%>" class="current-player-card bg-white shadow-dark rounded-lg overflow-hidden w-44 h- h-60 p-1 flex justify-center items-center">
+      <%if @game_play[:cards_dealt] %>
+        <%@game_play[:player_hands][0].each do |card|%>
+          <% Rails.logger.debug(card)%>
+          <div id="card-<%=card[:id]%>" data-card-id="<%=card[:id]%>" class="current-player-card bg-white shadow-dark rounded-lg overflow-hidden w-44 h- h-60 p-1 flex justify-center items-center">
             <div  class="border-green-200 border-8 border-double rounded-lg w-full h-full flex justify-center items-center"> 
-              <span class="font-card text-7xl text-black"><%=card["letters"]%></span>
+              <span class="font-card text-7xl text-black"><%=card[:letters]%></span>
             </div>
           </div>
         <%end%>
