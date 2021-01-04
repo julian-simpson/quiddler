@@ -1,0 +1,10 @@
+<div id="current-player-hand" data-controller="card" class="flex flex-wrap justify-center items-center w-full">
+  <%cards.each do |card|%>
+    <% Rails.logger.debug(card)%>
+    <div id="card-<%=card[:id]%>" data-card-id="<%=card[:id]%>" class="current-player-card bg-white shadow-dark rounded-lg overflow-hidden w-44 h- h-60 p-1 flex justify-center items-center">
+      <div  class="border-green-200 border-8 border-double rounded-lg w-full h-full flex justify-center items-center"> 
+        <span class="font-card text-7xl text-black"><%=card[:letters]%></span>
+      </div>
+    </div>
+  <%end%>
+</div>

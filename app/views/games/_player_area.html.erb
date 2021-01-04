@@ -1,0 +1,22 @@
+<div id="player-area" class="flex flex-wrap justify-left w-full">
+  <% players.each_with_index do |player, index| %>
+    <div class="
+       bg-white rounded-lg mr-4 p-1 w-32 h-32 flex-col justify-center items-center align-middle">
+      <div id="player_space_<%=index%>" class="w-full h-full rounded-lg p-2 flex flex-col items-center justify-center
+      <%if index ==  current_player_index%>
+        border-solid border-gray-400 border-2
+      <%end%>
+      <%if index == player_turn_index && game_started == true %>
+        animate-pulse
+      <%end%>
+      ">
+        <div class=" bg-<%=['pink-200','yellow-200','red-400','green-300','blue-300','purple-200','grey-400','indigo-400'][index]%> text-black text-xl w-12 h-12 rounded-full inline-flex items-center align-middle justify-center animate-none
+        <%if index == current_player_index%>
+          border-gray-300 border-2
+        <%end%>">
+          P<%=index + 1%>
+        </div>
+      </div>
+    </div>
+  <% end %>  
+</div>

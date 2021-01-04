@@ -1,0 +1,15 @@
+<div id="card-deck" class="flex justify-center items-center bg-gradient-to-r from-purple-400 to-purple-100 shadow-dark rounded-lg  border-l border-b border-white w-44 h-60 mb-8"
+<% if pick_up_enabled %> 
+  data-reflex="click->GameReflex#pick_up_from_deck"
+<% end %>
+>
+  <% if current_player_dealer %>
+    <button 
+      class="bg-purple-600 shadow-lg rounded-md w-32 mb-4 h-16 min-w-max flex justify-center items-center" 
+      data-reflex="click->GameReflex#deal"
+      data-game-id="<%= @game_id %>"
+    >
+      Deal
+    </button>
+  <% end%>
+</div>

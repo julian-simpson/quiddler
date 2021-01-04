@@ -5,6 +5,7 @@ export default class extends ApplicationController {
 
   connect() {
     super.connect()
+    console.log("CONNECTING TO CARD CONTROLLER JS")
     let currentPlayerCards = document.getElementById('current-player-hand');
     this.sortable = Sortable.create(currentPlayerCards, {
       group: 'shared',

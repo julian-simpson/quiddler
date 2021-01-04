@@ -4,7 +4,7 @@
 class GameChannel < ApplicationCable::Channel
   def subscribed
     # individaul player stream
-    # stream_from "game:#{session[:current_game]}:#{session[:current_player_number]}"
+    stream_from "game:#{params[:game_id]}:session:#{session_id}"
     # game stream
     stream_from "game:#{params[:game_id]}"
   end

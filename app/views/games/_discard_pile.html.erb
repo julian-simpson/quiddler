@@ -1,13 +1,16 @@
     <div id="discard-landing" data-controller="card" class="flex flex-row justify-center items-center border-dashed border-white border-4 w-60 h-80 transform">
       <% if !cards.empty? %>
         <% if cards.length > 1 %>
-          <div id="card-<%=cards.last[:id]%>" data-card-id="<%=cards[-2][:id]%>" class="not-draggable bg-white shadow-dark rounded-lg overflow-hidden w-44 h- h-60 p-1 flex justify-center items-center first:-mr-40 last:mr-0">
+          <div id="card-<%=cards[-2][:id]%>" data-card-id="<%=cards[-2][:id]%>" class="not-draggable bg-white shadow-dark rounded-lg overflow-hidden w-44 h- h-60 p-1 flex justify-center items-center first:-mr-40 last:mr-0">
             <div  class="border-green-200 border-8 border-double rounded-lg w-full h-full flex justify-center items-center"> 
               <span class="font-card text-7xl text-black"><%=cards[-2][:letters]%></span>
             </div>
           </div>
         <% end %> 
-        <div id="card-<%=cards.last[:id]%>" data-card-id="<%=cards.last[:id]%>" class=" bg-white shadow-dark rounded-lg overflow-hidden w-44 h- h-60 p-1 flex justify-center items-center"
+        <div id="card-<%=cards.last[:id]%>" data-card-id="<%=cards.last[:id]%>" class=" bg-white shadow-dark rounded-lg overflow-hidden w-44 h- h-60 p-1 flex justify-center items-center
+        <%if !pick_up_enabled %>
+          not_draggable
+        <%end %>"
           data-reflex="click->GameReflex#pick_up_from_discard_pile">
           <div  class="border-green-200 border-8 border-double rounded-lg w-full h-full flex justify-center items-center"> 
             <span class="font-card text-7xl text-black"><%=cards.last[:letters]%></span>

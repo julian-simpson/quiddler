@@ -27,28 +27,33 @@ class GamesController < ApplicationController
   end
 
   def show
-    # show current hand
+    # show game
 
-    # session[:player_hands] = []
-    # session[:discarded_cards] = []
-    # session[:card_deck] = []
-    # session[:cards_dealt] = false
     @game_id = params[:id]
-    game = Game.find(@game_id)
-    
-    # Rails.cache.write("games/#{@game_id}/game_play", game.game_play_defaults)
-    
-    @player_count = game.player_count
+
+    # Rails.cache.write("games/#{@game_id}/game_play", Game.game_play_defaults)
+
     @game_play = Rails.cache.fetch("games/#{@game_id}/game_play") do
-      game.game_play ? game.game_play : game.game_play_defaults
+      game = Game.find(@game_id)
+      game.game_play || Game.game_play_defaults
     end
 
     session[:current_game_id] = @game_id
-    Rails.logger.debug(session[:current_game_id])
-    session[:current_player_number] = 0
+
+    # look for current session in player array
+    session[:current_player_index] = @game_play[:players].index { |h| h[:session_id] == session.id.to_s }
 
     Rails.logger.debug('Game Play')
     Rails.logger.debug(@game_play.to_yaml)
+    return if session[:current_player_index]
+
+    @game_play[:players].push({ session_id: session.id.to_s })
+    session[:current_player_index] = @game_play[:players].length - 1
+    Rails.cache.write("games/#{@game_id}/game_play", @game_play)
+
+    # Rails.logger.debug('Game Play')
+    # Rails.logger.debug(@game_play.to_yaml)
+    # Rails.logger.debug("Session_id:#{session.id}")
   end
 
   def update
