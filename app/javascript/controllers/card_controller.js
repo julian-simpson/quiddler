@@ -40,13 +40,8 @@ export default class extends ApplicationController {
   }
 
   move(event){
-    console.log(event.dragged.classList)
     if (event.dragged.classList.contains("not-draggable")){
-      console.log("moving anyway!")
       return false
-    }
-    else {
-      console.log("totes draggable!")
     }
   }
 
