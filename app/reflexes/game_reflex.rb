@@ -133,15 +133,14 @@ class GameReflex < ApplicationReflex
   end
 
   def sort_hand
-    Rails.logger.debug('Sort Hand reflex called')
     game_id = session[:current_game_id]
     game_play = Rails.cache.read("games/#{game_id}/game_play")
     current_player_index = session[:current_player_index]
 
     sorted_card_ids = JSON.parse(element.dataset.cards)
-    game_play[:players][current_player_index][:hand] = game_play[:players][current_player_index][:hand]
-                                                       .sort_by { |card| sorted_card_ids.index card['id'].to_s }
 
+    game_play[:players][current_player_index][:hand] = game_play[:players][current_player_index][:hand]
+                                                       .sort_by { |card| sorted_card_ids.index card[:id].to_s }
     # redraw the player hand with new card
     cable_ready["game:#{session[:current_game_id]}:session:#{session.id}"].morph(
       selector: '#current-player-hand',
