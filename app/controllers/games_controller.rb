@@ -5,6 +5,7 @@ class GamesController < ApplicationController
   def index
     # landing
     @games = Game.all
+    @animate = session[:animate] || false
   end
 
   def new
@@ -43,8 +44,8 @@ class GamesController < ApplicationController
     # look for current session in player array
     session[:current_player_index] = @game_play[:players].index { |h| h[:session_id] == session.id.to_s }
 
-    Rails.logger.debug('Game Play')
-    Rails.logger.debug(@game_play.to_yaml)
+    # Rails.logger.debug('Game Play')
+    # Rails.logger.debug(@game_play.to_yaml)
     return if session[:current_player_index]
 
     @game_play[:players].push({ session_id: session.id.to_s })

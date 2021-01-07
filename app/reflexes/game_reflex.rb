@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+ # frozen_string_literal: true
 
 # Game Reflex
 class GameReflex < ApplicationReflex
@@ -209,5 +209,8 @@ class GameReflex < ApplicationReflex
 
     Rails.cache.write("games/#{game_id}/game_play", game_play)
     Rails.cache.increment("games/#{game_id}/spacer_card_id")
+  end
+  def flip_animate_value
+    session[:animate] = !session[:animate]
   end
 end
