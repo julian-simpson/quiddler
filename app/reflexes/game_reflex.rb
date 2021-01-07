@@ -20,6 +20,7 @@ class GameReflex < ApplicationReflex
 
     game_play[:cards_dealt] = true
     Rails.cache.write("games/#{game_id}/game_play", game_play)
+    Rails.cache.write("games/#{game_id}/spacer_card_id", 200)
 
     # morph the board partials for each player
     game_play[:players].each_with_index do |player, index|
@@ -29,7 +30,7 @@ class GameReflex < ApplicationReflex
       )
 
       cable_ready["game:#{game_id}:session:#{player[:session_id]}"].morph(
-        selector: '#discard-landing',
+        selector: '#discard-container',
         html: render_discard_pile(game_play, index)
       )
 
@@ -45,7 +46,6 @@ class GameReflex < ApplicationReflex
 
       cable_ready["game:#{game_id}:session:#{player[:session_id]}"].broadcast
     end
-    morph :nothing
   end
 
   def pick_up_from_deck
@@ -71,7 +71,7 @@ class GameReflex < ApplicationReflex
 
     # redraw discard pile with pickup disabled
     cable_ready["game:#{game_id}:session:#{session.id}"].morph(
-      selector: '#discard-landing',
+      selector: '#discard-container',
       html: render_discard_pile(game_play, session[:current_player_index])
     )
 
@@ -96,7 +96,7 @@ class GameReflex < ApplicationReflex
 
     game_play[:players].each_with_index do |player, index|
       cable_ready["game:#{game_id}:session:#{player[:session_id]}"].morph(
-        selector: '#discard-landing',
+        selector: '#discard-container',
         html: render_discard_pile(game_play, index)
       )
       cable_ready["game:#{game_id}:session:#{player[:session_id]}"].morph(
@@ -105,10 +105,11 @@ class GameReflex < ApplicationReflex
       )
 
       cable_ready["game:#{game_id}:session:#{player[:session_id]}"].broadcast
+
     end
   end
 
-  def pick_up_discard_pile
+  def pick_up_from_discard_pile
     game_id = session[:current_game_id]
     game_play = Rails.cache.read("games/#{game_id}/game_play")
 
@@ -120,7 +121,7 @@ class GameReflex < ApplicationReflex
 
     game_play[:players].each_with_index do |player, index|
       cable_ready["game:#{game_id}:session:#{player[:session_id]}"].morph(
-        selector: '#discard-landing',
+        selector: '#discard-container',
         html: render_discard_pile(game_play, index)
       )
       cable_ready["game:#{game_id}:session:#{player[:session_id]}"].morph(
@@ -129,6 +130,7 @@ class GameReflex < ApplicationReflex
       )
 
       cable_ready["game:#{game_id}:session:#{player[:session_id]}"].broadcast
+
     end
   end
 
@@ -176,7 +178,7 @@ class GameReflex < ApplicationReflex
       )
 
       cable_ready["game:#{game_id}:session:#{player[:session_id]}"].morph(
-        selector: '#discard-landing',
+        selector: '#discard-container',
         html: render_discard_pile(game_play, index)
       )
 
@@ -192,5 +194,27 @@ class GameReflex < ApplicationReflex
 
       cable_ready["game:#{game_id}:session:#{player[:session_id]}"].broadcast
     end
+
+    #cable_ready["game:#{game_id}:session:#{session.id}"].dispatch_event(
+    #  name: 'click->card#enableDisableDiscard'
+    #)
+  end
+
+  def add_spacer_card
+    Rails.logger.debug('Add Spacer Card')
+    game_id = session[:current_game_id]
+    current_player_index = session[:current_player_index]
+    game_play = Rails.cache.read("games/#{game_id}/game_play")
+    id = Rails.cache.read("games/#{game_id}/spacer_card_id")
+
+    game_play[:players][current_player_index][:hand].push({id: id, letters: nil, value: nil})
+
+    cable_ready["game:#{session[:current_game_id]}:session:#{session.id}"].morph(
+      selector: '#current-player-hand',
+      html: render_player_hand(game_play, current_player_index)
+    ).broadcast
+
+    Rails.cache.write("games/#{game_id}/game_play", game_play)
+    Rails.cache.increment("games/#{game_id}/spacer_card_id")
   end
 end

@@ -1,10 +1,26 @@
-<div id="current-player-hand" data-controller="card" class="flex flex-wrap justify-center items-center w-full">
+<div id="current-player-hand" data-controller="card" data-card-discard-enabled-value="<%=discard_enabled%>" class="flex flex-wrap justify-center items-center w-full">
   <%cards.each do |card|%>
-    <% Rails.logger.debug(card)%>
-    <div id="card-<%=card[:id]%>" data-card-id="<%=card[:id]%>" class="current-player-card bg-white shadow-dark rounded-lg overflow-hidden w-44 h- h-60 p-1 flex justify-center items-center">
+    <div id="card-<%=card[:id]%>" data-card-id="<%=card[:id]%>" class="current-player-card bg-white shadow-dark rounded-lg overflow-hidden w-44 h- h-60 p-1 flex justify-center items-center
+      <% if card[:letters].nil? %>
+        spacer-card
+      <%end%>
+    ">
       <div  class="border-green-200 border-8 border-double rounded-lg w-full h-full flex justify-center items-center"> 
         <span class="font-card text-7xl text-black"><%=card[:letters]%></span>
       </div>
     </div>
   <%end%>
+  <% if cards.length > 2 %>
+    <div id="card-add-spacer" data-card-id="card-add-spacer" class="not-draggable bg-white shadow-2xl rounded-lg overflow-hidden w-44 h- h-60 p-1 flex justify-center items-center bg-opacity-10">
+      <div class="border-green-200 border-8 border-double border-opacity-20 rounded-lg w-full h-full flex justify-center items-center"> 
+        <button 
+          class="bg-purple-800 border-purple-200 border-2 text-base shadow-lg rounded-md w-32 h-12 flex justify-center items-center" 
+          data-reflex="click->GameReflex#add_spacer_card"
+          data-game-id="<%= @game_id %>"
+        >
+          Add Spacer
+        </button>
+      </div>
+    </div>
+  <% end %>
 </div>
