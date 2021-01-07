@@ -103,9 +103,7 @@ class GameReflex < ApplicationReflex
         selector: '#card-deck',
         html: render_card_deck(game_play, index)
       )
-
       cable_ready["game:#{game_id}:session:#{player[:session_id]}"].broadcast
-
     end
   end
 
@@ -130,7 +128,6 @@ class GameReflex < ApplicationReflex
       )
 
       cable_ready["game:#{game_id}:session:#{player[:session_id]}"].broadcast
-
     end
   end
 
@@ -194,10 +191,6 @@ class GameReflex < ApplicationReflex
 
       cable_ready["game:#{game_id}:session:#{player[:session_id]}"].broadcast
     end
-
-    #cable_ready["game:#{game_id}:session:#{session.id}"].dispatch_event(
-    #  name: 'click->card#enableDisableDiscard'
-    #)
   end
 
   def add_spacer_card

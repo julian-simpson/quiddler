@@ -19,6 +19,13 @@ module GameHelper
                                               discard_enabled: discard_enabled }
   end
 
+  def render_go_out(game_play, current_player_index)
+    pick_up_enabled = current_player_index == game_play[:player_turn_index] && game_play[:turn_has_picked_up] == false
+    discard_enabled = current_player_index == game_play[:player_turn_index] && game_play[:turn_has_picked_up] == true
+    render partial: 'go_out', locals: { pick_up_enabled: pick_up_enabled,
+                                        discard_enabled: discard_enabled }
+  end
+
   def render_player_area(game_play, current_player_index)
     render partial: 'player_area', locals: { players: game_play[:players],
                                              current_player_index: current_player_index,

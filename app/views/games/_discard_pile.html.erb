@@ -1,5 +1,5 @@
   <div id="discard-container" data-controller="card" data-card-discard-enabled-value="<%=discard_enabled%>">
-    <div id="discard-landing" class="flex flex-row justify-center items-center border-dashed border-purple-100 border-4 w-60 h-80 transform">
+    <div id="discard-landing" class="flex flex-row justify-center items-center border-dashed border-purple-100 border-4 w-60 h-80 transform mb-12">
       <% if !cards.empty? %>
         <% if cards.length > 1 %>
           <div id="card-<%=cards[-2][:id]%>" data-card-id="<%=cards[-2][:id]%>" class="not-draggable bg-white shadow-dark rounded-lg overflow-hidden w-44 h- h-60 p-1 flex justify-center items-center first:-mr-40 last:mr-0">

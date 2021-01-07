@@ -31,7 +31,7 @@ class GamesController < ApplicationController
 
     @game_id = params[:id]
 
-    # Rails.cache.write("games/#{@game_id}/game_play", Game.game_play_defaults)
+    Rails.cache.write("games/#{@game_id}/game_play", Game.game_play_defaults)
 
     @game_play = Rails.cache.fetch("games/#{@game_id}/game_play") do
       game = Game.find(@game_id)

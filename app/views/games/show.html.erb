@@ -2,6 +2,7 @@
   <div id="left-col" class="flex flex-col items-center p-4">
     <%= render_card_deck(@game_play, session[:current_player_index]) %>
     <%= render_discard_pile(@game_play, session[:current_player_index]) %>
+    <%= render_go_out(@game_play, session[:current_player_index]) %>
   </div>
 
   <div id="right-col" class="flex flex-col p-4 justify-between w-full">

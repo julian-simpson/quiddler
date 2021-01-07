@@ -1,0 +1,9 @@
+<div id="go-out-control" data-controller="card" data-card-discard-enabled-value="<%=discard_enabled%>" class="hidden">
+  <button 
+    class="bg-purple-800 border-purple-200 border-2 text-base shadow-lg rounded-md w-32 h-12 flex justify-center items-center" 
+    data-reflex="click->GameReflex#go_out"
+    data-game-id="<%= @game_id %>"
+  >
+    Go Out
+  </button>
+</div>
